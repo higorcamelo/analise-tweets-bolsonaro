@@ -16,6 +16,20 @@ st.markdown("<h1 style='text-align: center; color: black; font-size: 36px;'>Bols
 def extract_emojis(text):
     return [char for char in text if char in emoji.UNICODE_EMOJI]
 
+def info_card(title, value, color):
+    card_html = f"""
+    <div style="background-color: {color}; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <h3 style="color: white;">{title}</h3>
+        <p style="font-size: 24px; font-weight: bold; color: white;">{value}</p>
+    </div>
+    """
+    st.sidebar.markdown(card_html, unsafe_allow_html=True)
+    
+# Média de likes por tweet
+media_likes = df['likes'].mean().round(0)
+# Média de retweets por tweet, removendo as casas decimais
+media_retweets = df['retweets'].mean().round(0)
+    
 # Calcular emojis mais frequentes
 df['emojis'] = df['emojis'].apply(lambda x: [] if pd.isna(x) else eval(x))
 emojis_presentes = df[df['emojis'].apply(lambda x: len(x) > 0)]
@@ -79,14 +93,16 @@ df_filhos = pd.DataFrame.from_dict(filhos_counts, orient='index').reset_index()
 df_filhos.columns = ['filho', 'count']
 
 # Grafico de pizza com as menções aos filhos
-fig_filhos = px.pie(df_filhos, values='count', names='filho', title='Menções aos filhos')
-fig_filhos.update_traces(textposition='inside', textinfo='percent+label')
-fig_filhos.update_layout(
-    title={
-        'y':0.9,
-        'x':0.5,
-        'xanchor': 'center',
-        'yanchor': 'top'})
+fig_filhos = px.pie(df_filhos, values='count', names='filho', title='Menções aos Filhos', 
+                    hover_data=['filho', 'count'],
+                    labels={'count': 'Número de Menções'},
+                    )
+
+# Adicionando dica de ferramenta personalizada
+fig_filhos.update_traces(
+    hovertemplate='<b>%{label}</b><br>Número de Menções: %{value}<br>'
+                  '<i>Insight:</i> Maior prevalência de menções ao filho Eduardo, indicando que este é o mais ativo nas redes sociais e o administrador do perfil do pai no Twitter.'
+)
 
 # Criar gráfico de barras clusterizado
 fig_minis = px.bar(df_ministerios, x='count', y='ministerio', orientation='h',
@@ -104,6 +120,12 @@ fig_minis.update_layout(barmode='group', yaxis_categoryorder='total ascending')
 
 # Adicionar tooltip
 fig_minis.update_traces(hovertemplate='%{x} menções', textposition='outside')
+
+# Adicionar dica de ferramenta personalizada
+fig_minis.update_traces(
+    hovertemplate='<b>%{y}</b><br>Número de Menções: %{x}<br>'
+                  '<i>Insight:</i> Grande número de menções ao min. da infraestrutura e nominalmente ao ministro Tarcísio, indicando um foco do ex-presidente em um possível sucessor político.'
+)
 
 # Juntar todas as palavras dos tokens em uma única string
 all_tokens = ''.join(df['tokens'].explode().dropna())
@@ -129,10 +151,19 @@ fig_lik_ret = px.scatter(df, x='likes', y='retweets', trendline='ols',
 # Adicionar rótulos
 fig_lik_ret.update_layout(xaxis_title='Likes', yaxis_title='Retweets')
 
-
+# Adicionar dica de ferramenta personalizada
+fig_lik_ret.update_traces(
+    hovertemplate='<b>Likes:</b> %{x}<br><b>Retweets:</b> %{y}<br>'
+                  '<i>Insight:</i> Relativa facilidade dos tweets do ex-presidente beirar os 100 mil likes e 15 mil retweets, indicando uma grande base de apoiadores e propagação de suas ideias.'
+)
 col1, col2 = st.columns(2)
- 
+
 col1.plotly_chart(fig_minis, use_container_width=True)
 col1.pyplot(plt)
+st.sidebar.header("Informações Gerais")
+info_card("Emojis mais frequentes", f"1º {top_emojis[0][0]}     2º {top_emojis[1][0]}   3º {top_emojis[2][0]} " , "#4CAF50")
+info_card("Hashtags mais frequentes", f"#{top_hashtags[0][0]}" , "#F44336")
+info_card("Média de Likes por Tweet", f"aprox. {media_likes}", "#2196F3")
+info_card("Retweets Totais", f"aprox. {media_retweets}", "#FF9800")
 col2.plotly_chart(fig_filhos, use_container_width=True)
 col2.plotly_chart(fig_lik_ret, use_container_width=True)
