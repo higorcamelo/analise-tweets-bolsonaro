@@ -26,7 +26,7 @@ O código responsável pelo pré-processamento dos dados realiza as seguintes et
 ## Insights Obtidos
 Após a análise exploratória dos dados, alguns insights notáveis incluem:
 
-- **Menções Mais Frequentes:** Identificação dos ministérios, ministros e filhos mais mencionados nos tweets.
+- **Menções Mais Frequentes:** Destaque para a presença maior de menções ao ministro Tarcísio, talvez indicando uma prefência do ex-presidente e investindo no titular da infraestrutura um futuro sucessor ou aliado chave
 - **Hashtags Relevantes:** Destaque para hashtags de confrontação a opositores.
-- **Emojis Mais Utilizados:** Observação de emojis com a bandeira do Brasil e de comunicação "informal" com o uso do "joinha", além de destaque para a frequência da bandeira dos EUA.
+- **Emojis Mais Utilizados:** Observação de emojis com a bandeira do Brasil e de comunicação informal com o uso do "joinha", além de destaque para a frequência da bandeira dos EUA.
 
