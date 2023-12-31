@@ -2,7 +2,7 @@
 
 **Este projeto é puramente educacional, profissional e de análise de dados. Não reflete opiniões políticas ou pessoais.**
 
-Este projeto realiza uma análise da comunicação do ex-presidente Jair Bolsonaro por meio de seus tweets, explorando insights e padrões ao longo do período de 2019-2020. O dashboard resultante destaca visualizações interativas e informações úteis sobre os dados.
+Este projeto realiza uma análise da comunicação do ex-presidente Jair Bolsonaro por meio de seus tweets, explorando insights e padrões ao longo do período de 2019-2020. O dashboard resultante destaca visualizações interativas e informações úteis sobre os dados. Banco de dados obtido a partir do [Kaggle](https://www.kaggle.com/datasets/lgmoneda/jair-bolsonaro-twitter-data)
 
 ## Tecnologias Utilizadas
 - **Python**: Linguagem de programação principal.
