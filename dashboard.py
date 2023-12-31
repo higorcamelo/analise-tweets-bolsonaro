@@ -24,7 +24,10 @@ def info_card(title, value, color):
     </div>
     """
     st.sidebar.markdown(card_html, unsafe_allow_html=True)
-    
+
+# Espaçamento
+st.markdown("<br>", unsafe_allow_html=True)
+
 # Média de likes por tweet
 media_likes = df['likes'].mean().round(0)
 # Média de retweets por tweet, removendo as casas decimais
@@ -42,6 +45,9 @@ df['hashtags'] = df['hashtags'].apply(lambda x: [] if pd.isna(x) else eval(x))
 hashtags_presentes = df[df['hashtags'].apply(lambda x: len(x) > 0 and x[0] is not None)]
 hashtag_counts = Counter(hashtags_presentes['hashtags'].explode())
 top_hashtags = hashtag_counts.most_common(3)
+
+# Espaçamento
+st.markdown("<br>", unsafe_allow_html=True)
 
 # Lista de ministérios mais mencionados
 ministerios_list = [
@@ -92,6 +98,9 @@ df_ministros.columns = ['ministro', 'count']
 df_filhos = pd.DataFrame.from_dict(filhos_counts, orient='index').reset_index()
 df_filhos.columns = ['filho', 'count']
 
+# Espaçamento
+st.markdown("<br>", unsafe_allow_html=True)
+
 # Grafico de pizza com as menções aos filhos
 fig_filhos = px.pie(df_filhos, values='count', names='filho', title='Menções aos Filhos', 
                     hover_data=['filho', 'count'],
@@ -103,6 +112,12 @@ fig_filhos.update_traces(
     hovertemplate='<b>%{label}</b><br>Número de Menções: %{value}<br>'
                   '<i>Insight:</i> Maior prevalência de menções ao filho Eduardo, indicando que este é o mais ativo nas redes sociais e o administrador do perfil do pai no Twitter.'
 )
+
+# Adicionando um pouco de espaço
+fig_filhos.update_layout(margin=dict(t=50))
+
+# Espaçamento
+st.markdown("<br>", unsafe_allow_html=True)
 
 # Criar gráfico de barras clusterizado
 fig_minis = px.bar(df_ministerios, x='count', y='ministerio', orientation='h',
@@ -121,11 +136,17 @@ fig_minis.update_layout(barmode='group', yaxis_categoryorder='total ascending')
 # Adicionar tooltip
 fig_minis.update_traces(hovertemplate='%{x} menções', textposition='outside')
 
-# Adicionar dica de ferramenta personalizada
+# Adicionando dica de ferramenta personalizada
 fig_minis.update_traces(
     hovertemplate='<b>%{y}</b><br>Número de Menções: %{x}<br>'
                   '<i>Insight:</i> Grande número de menções ao min. da infraestrutura e nominalmente ao ministro Tarcísio, indicando um foco do ex-presidente em um possível sucessor político.'
 )
+
+# Adicionando um pouco de espaço
+fig_minis.update_layout(margin=dict(t=50))
+
+# Espaçamento
+st.markdown("<br>", unsafe_allow_html=True)
 
 # Juntar todas as palavras dos tokens em uma única string
 all_tokens = ''.join(df['tokens'].explode().dropna())
@@ -139,6 +160,12 @@ plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis('off')
 plt.title('Palavras Mais Citadas nos Tweets')
 
+# Adicionando um pouco de espaço
+plt.subplots_adjust(top=0.8)
+
+# Espaçamento
+st.markdown("<br>", unsafe_allow_html=True)
+
 likes = df['likes']
 retweets = df['retweets']
 
@@ -151,19 +178,31 @@ fig_lik_ret = px.scatter(df, x='likes', y='retweets', trendline='ols',
 # Adicionar rótulos
 fig_lik_ret.update_layout(xaxis_title='Likes', yaxis_title='Retweets')
 
-# Adicionar dica de ferramenta personalizada
+# Adicionando dica de ferramenta personalizada
 fig_lik_ret.update_traces(
     hovertemplate='<b>Likes:</b> %{x}<br><b>Retweets:</b> %{y}<br>'
                   '<i>Insight:</i> Relativa facilidade dos tweets do ex-presidente beirar os 100 mil likes e 15 mil retweets, indicando uma grande base de apoiadores e propagação de suas ideias.'
 )
+
+# Adicionando um pouco de espaço
+fig_lik_ret.update_layout(margin=dict(t=50))
+
+# Espaçamento
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Gráficos na coluna 1
 col1, col2 = st.columns(2)
 
+col1.plotly_chart(fig_filhos, use_container_width=True)
 col1.plotly_chart(fig_minis, use_container_width=True)
-col1.pyplot(plt)
+col2.plotly_chart(fig_lik_ret, use_container_width=True)
+
+# Adicionando um pouco de espaço
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Informações Gerais na barra lateral
 st.sidebar.header("Informações Gerais")
 info_card("Emojis mais frequentes", f"1º {top_emojis[0][0]}     2º {top_emojis[1][0]}   3º {top_emojis[2][0]} " , "#4CAF50")
 info_card("Hashtags mais frequentes", f"#{top_hashtags[0][0]}" , "#F44336")
 info_card("Média de Likes por Tweet", f"aprox. {media_likes}", "#2196F3")
 info_card("Retweets Totais", f"aprox. {media_retweets}", "#FF9800")
-col2.plotly_chart(fig_filhos, use_container_width=True)
-col2.plotly_chart(fig_lik_ret, use_container_width=True)
